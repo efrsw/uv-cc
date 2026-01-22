@@ -1,0 +1,72 @@
+services:
+  collector:
+    build: ./collector
+    ports:
+      - "31700:80"
+
+  # Section 1: Main Terminal Entry
+  camera1:
+    image: ccuni/camera-service-2025w
+    ports:
+      - "31100:80"
+    environment:
+      - SECTION_ID=1
+      - POSITION=entry
+
+  # Section 2: Security Checkpoint Exit
+  camera2:
+    image: ccuni/camera-service-2025w
+    ports:
+      - "31101:80"
+    environment:
+      - SECTION_ID=2
+      - POSITION=exit
+
+  # Section 3: Gate Area Entry
+  camera3:
+    image: ccuni/camera-service-2025w
+    ports:
+      - "31102:80"
+    environment:
+      - SECTION_ID=3
+      - POSITION=entry
+
+  # Section 4: Baggage Claim Exit
+  camera4:
+    image: ccuni/camera-service-2025w
+    ports:
+      - "31103:80"
+    environment:
+      - SECTION_ID=4
+      - POSITION=exit
+
+  # Section 5: Customs Entry
+  camera5:
+    image: ccuni/camera-service-2025w
+    ports:
+      - "31104:80"
+    environment:
+      - SECTION_ID=5
+      - POSITION=entry
+
+  recognition:
+    image: ccuni/face-recognition-service-2025w
+    ports:
+      - "31300:80"
+    restart: unless-stopped
+
+  analytics:
+    image: ccuni/image-analysis-service-2025w
+    ports:
+      - "31200:80"
+    restart: unless-stopped
+
+  alert:
+    image: ccuni/alert-service-2025w
+    ports:
+      - "31500:80"
+
+  section:
+    image: ccuni/section-service-2025w
+    ports:
+      - "31400:80"

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alert
+  namespace: airport-security
+spec:
+  selector:
+    matchLabels:
+      app: alert
+  template:
+    metadata:
+      labels:
+        app: alert
+    spec:
+      containers:
+        - name: alert-container
+          image: ccuni/alert-service-2025w
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /readinessProbe
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /livenessProbe
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alert-service
+  namespace: airport-security
+spec:
+  type: ClusterIP
+  selector:
+    app: alert
+  ports:
+    - port: 7070
+      targetPort: 80

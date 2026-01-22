@@ -1,0 +1,50 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: airport-ingress
+  namespace: airport-security
+  labels:
+    app.kubernetes.io/name: airport-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: airport-collector.io
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: collector-service
+                port:
+                  number: 7070
+    - host: airport-camera.io
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: camera-service
+                port:
+                  number: 7070
+    - host: airport-sections.io
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: section-service
+                port:
+                  number: 7070
+    - host: airport-alerts.io
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: alert-service
+                port:
+                  number: 7070
